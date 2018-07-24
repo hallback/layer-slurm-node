@@ -18,6 +18,7 @@ from charmhelpers.core.host import service_running
 from charmhelpers.core.hookenv import config
 from charmhelpers.core.hookenv import status_set
 from charmhelpers.core.hookenv import storage_get
+from charmhelpers.core.hookenv import log
 
 import charms.reactive as reactive
 import charms.reactive.flags as flags
@@ -40,8 +41,10 @@ def missing_controller():
     status_set('blocked', 'Missing a relation to slurm-controller')
     # Stop slurmd
     service_stop(SLURMD_SERVICE)
-    flags.clear_flag('slurm-node.configured')
-    flags.clear_flag('slurm-node.info.sent')
+
+    for f in ['slurm-node.configured', 'slurm-node.info.sent']:
+        flags.clear_flag(f)
+        log('Cleared {} flag'.format(f))
 
 
 @reactive.when('endpoint.slurm-cluster.joined')
@@ -51,6 +54,7 @@ def send_node_info(cluster_endpoint):
                                     partition=config('partition'),
                                     default=config('default'))
     flags.set_flag('slurm-node.info.sent')
+    log('Set {} flag'.format('slurm-node.info.sent'))
 
 
 @reactive.when('endpoint.slurm-cluster.active.available')
@@ -68,7 +72,10 @@ def configure_node(cluster_changed, cluster_joined):
         service_start(SLURMD_SERVICE)
 
     flags.set_flag('slurm-node.configured')
+    log('Set {} flag'.format('slurm-node.configured'))
+
     flags.clear_flag('endpoint.slurm-cluster.active.changed')
+    log('Cleared {} flag'.format('endpoint.slurm-cluster.active.changed'))
 
 
 @reactive.when('endpoint.slurm-cluster.joined', 'slurm-node.configured')
@@ -79,14 +86,16 @@ def node_ready(cluster_endpoint):
 @reactive.when_not('endpoint.slurm-cluster.active.available')
 def controller_gone():
     service_stop(SLURMD_SERVICE)
-    flags.clear_flag('slurm-node.configured')
-    flags.clear_flag('slurm-node.info.sent')
+    for f in ['slurm-node.configured', 'slurm-node.info.sent']:
+        flags.clear_flag(f)
+        log('Cleared {} flag'.format(f))
 
 
 @reactive.hook('config-changed')
 def config_changed():
-    flags.clear_flag('slurm-node.configured')
-    flags.clear_flag('slurm-node.info.sent')
+    for f in ['slurm-node.configured', 'slurm-node.info.sent']:
+        flags.clear_flag(f)
+        log('Cleared {} flag'.format(f))
 
 
 @reactive.hook('scratch-storage-attached')
