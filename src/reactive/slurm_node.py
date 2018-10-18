@@ -77,6 +77,11 @@ def configure_node(cluster_changed, cluster_joined):
     flags.clear_flag('endpoint.slurm-cluster.active.changed')
     log('Cleared {} flag'.format('endpoint.slurm-cluster.active.changed'))
 
+    # Clear this flag to be able to signal munge_key changed if it occurs from
+    # a controller.
+    flags.clear_flag('endpoint.slurm-cluster.changed.munge_key')
+    log('Cleared {} flag'.format('endpoint.slurm-cluster.changed.munge_key'))
+
 
 @reactive.when('endpoint.slurm-cluster.joined', 'slurm-node.configured')
 def node_ready(cluster_endpoint):
