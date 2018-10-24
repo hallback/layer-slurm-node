@@ -1,4 +1,4 @@
-name: slurm-node-v2
+name: slurm-node
 summary: Slurm node charm
 maintainer: omnivector <omnivector@omnivector.solutions>
 description: |
@@ -11,7 +11,7 @@ series:
   - xenial
 requires:
   slurm-cluster:
-    interface: slurm-cluster-v2
+    interface: slurm-cluster
 storage:
   scratch:
     type: filesystem

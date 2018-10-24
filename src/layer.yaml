@@ -1,4 +1,4 @@
 includes:
-  - 'layer:slurm-v2'
-  - 'interface:slurm-cluster-v2'
-repo: 'https://github.com/hunt-genes/charm-slurm-node'
+  - 'layer:slurm'
+  - 'interface:slurm-cluster'
+repo: 'https://github.com/omnivector-solutions/layer-slurm-node'
