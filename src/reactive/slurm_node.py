@@ -20,6 +20,8 @@ from charmhelpers.core.hookenv import status_set
 from charmhelpers.core.hookenv import storage_get
 from charmhelpers.core.hookenv import log
 
+from charms.slurm.node import get_inventory
+
 import charms.reactive as reactive
 import charms.reactive.flags as flags
 
@@ -52,7 +54,8 @@ def missing_controller():
 def send_node_info(cluster_endpoint):
     cluster_endpoint.send_node_info(hostname=gethostname(),
                                     partition=config('partition'),
-                                    default=config('default'))
+                                    default=config('default'),
+                                    inventory=get_inventory())
     flags.set_flag('slurm-node.info.sent')
     log('Set {} flag'.format('slurm-node.info.sent'))
 
