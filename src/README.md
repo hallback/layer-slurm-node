@@ -1,14 +1,15 @@
-# Overview
-[![Travis](https://travis-ci.org/hunt-genes/charm-slurm-node.svg?branch=master)](https://travis-ci.org/hunt-genes/charm-slurm-node) [![license](https://img.shields.io/github/license/hunt-genes/charm-slurm-node.svg)](./copyright)
+# layer-slurm-node
 
-# Usage
+Reactive layer for `slurm-node`.
 
-  juju deploy slurm-controller
+## Usage
 
-## Scale out Usage
+This layer should be built into a charm and deployed alongside the rest of the slurm infrastructure stack.
 
-## Known Limitations and Issues
+### Contact
+Custom solutions extending this software:
+* [Omnivector Solutions](https://omnivector.solutions/contact)
 
-# Configuration
+### Copyright
+* AGPLv3 (see `LICENSE` file)
 
-# Contact Information

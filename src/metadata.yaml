@@ -1,6 +1,6 @@
 name: slurm-node
 summary: Slurm node charm
-maintainer: omnivector <omnivector@omnivector.solutions>
+maintainer: Omnivector Solutions <info@omnivector.solutions>
 description: |
   Slurm node charm
 tags:
