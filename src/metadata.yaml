@@ -1,4 +1,4 @@
-name: slurm-node
+name: slurm-node-centos
 summary: Slurm node charm
 maintainer: Omnivector Solutions <info@omnivector.solutions>
 description: |
@@ -7,8 +7,7 @@ tags:
   - slurm
 subordinate: false
 series:
-  - bionic
-  - xenial
+  - centos7
 requires:
   slurm-cluster:
     interface: slurm-cluster
