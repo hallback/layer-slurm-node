@@ -68,8 +68,19 @@ def configure_node(cluster_changed, cluster_joined):
 
     controller_data = cluster_changed.active_data
     create_spool_dir(context=controller_data)
+
     render_munge_key(context=controller_data)
+    # If the munge.key has been changed on the controller and munge is
+    # running, the service must be restarted to use the new key
+    if flags.is_flag_set('endpoint.slurm-cluster.changed.munge_key') and service_running(MUNGE_SERVICE):
+        log('Restarting munge due to key change on slurm-controller')
+        service_restart(MUNGE_SERVICE)
+
     render_slurm_config(context=controller_data)
+
+    # Make sure munge is running
+    if not service_running(MUNGE_SERVICE):
+        service_start(MUNGE_SERVICE)
     # Make sure slurmd is running
     if not service_running(SLURMD_SERVICE):
         service_start(SLURMD_SERVICE)
@@ -93,6 +104,7 @@ def node_ready(cluster_endpoint):
 
 @reactive.when_not('endpoint.slurm-cluster.active.available')
 def controller_gone():
+    service_stop(MUNGE_SERVICE)
     service_stop(SLURMD_SERVICE)
     for f in ['slurm-node.configured', 'slurm-node.info.sent']:
         flags.clear_flag(f)
@@ -114,9 +126,11 @@ def setup_storage():
 
 @reactive.when_file_changed(SLURM_CONFIG_PATH)
 def restart_on_slurm_change():
+    log('Restarting slurmd due to changed configuration on disk (%s)' % SLURM_CONFIG_PATH)
     service_restart(SLURMD_SERVICE)
 
 
 @reactive.when_file_changed(MUNGE_KEY_PATH)
 def restart_on_munge_change():
+    log('Restarting munge due to changed munge key on disk (%s)' % MUNGE_KEY_PATH)
     service_restart(MUNGE_SERVICE)
