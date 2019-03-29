@@ -9,6 +9,8 @@ subordinate: false
 series:
   - bionic
   - xenial
+  - cosmic
+  - disco
 requires:
   slurm-cluster:
     interface: slurm-cluster
