@@ -81,9 +81,11 @@ def configure_node(cluster_changed, cluster_joined):
     # Make sure munge is running
     if not service_running(MUNGE_SERVICE):
         service_start(MUNGE_SERVICE)
-    # Make sure slurmd is running
+    # Make sure slurmd is running, or restarted if running
     if not service_running(SLURMD_SERVICE):
         service_start(SLURMD_SERVICE)
+    else:
+        service_restart(SLURMD_SERVICE)
 
     flags.set_flag('slurm-node.configured')
     log('Set {} flag'.format('slurm-node.configured'))
