@@ -18,7 +18,7 @@ integration-test: build ## Run integration tests
 	tox -e integration
 
 build: clean ## Build charm
-	charm build src --log-level INFO --output-dir ./build
+	charm build src -w ./wheelhouse-overrides.txt --log-level INFO --output-dir ./build
 
 deploy: build ## Deploy charm 
 	juju deploy $(CHARM_BUILD_DIR)/$(CHARM_NAME)
