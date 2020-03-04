@@ -9,6 +9,7 @@ from charms.slurm.helpers import SLURMCTLD_SERVICE
 from charms.slurm.helpers import create_spool_dir
 from charms.slurm.helpers import render_munge_key
 from charms.slurm.helpers import render_slurm_config
+from charms.slurm.helpers import render_gres_config
 
 from charmhelpers.core.host import service_stop
 from charmhelpers.core.host import service_pause
@@ -78,9 +79,11 @@ def configure_node(cluster_changed, cluster_joined):
 
     render_slurm_config(context=controller_data)
 
-    # Make sure munge is running
-    if not service_running(MUNGE_SERVICE):
-        service_start(MUNGE_SERVICE)
+    gres_context = get_inventory()
+    if (gres_context['gpus'] > 0):
+        gres_context.update({key:controller_data[key] for key in ['slurm_user']})
+        render_gres_config(context=gres_context)
+
     # Make sure slurmd is running
     if not service_running(SLURMD_SERVICE):
         service_start(SLURMD_SERVICE)
